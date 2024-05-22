@@ -47,7 +47,7 @@ vim.keymap.set('i', 'jj', '<esc>')
 
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('custom-highlight-on-yank', { clear = true }),
+  group = vim.api.nvim_create_augroup('zxw-highlight-on-yank', { clear = true }),
   callback = function()
     vim.highlight.on_yank()
   end,
@@ -80,7 +80,33 @@ require('lazy').setup({
         topdelete = { text = '‾' },
         changedelete = { text = '~' },
       },
-    },
+      on_attach = function(bufnr)
+        local gitsigns = require('gitsigns')
+
+        local function map(mode, l, r, opts)
+          opts = opts or {}
+          opts.buffer = bufnr
+          vim.keymap.set(mode, l, r, opts)
+        end
+
+        -- Navigation
+        map('n', ']c', function()
+          if vim.wo.diff then
+            vim.cmd.normal({']c', bang = true})
+          else
+            gitsigns.nav_hunk('next')
+          end
+        end, { desc = 'Next Hunk' })
+
+        map('n', '[c', function()
+          if vim.wo.diff then
+            vim.cmd.normal({'[c', bang = true})
+          else
+            gitsigns.nav_hunk('prev')
+          end
+        end, { desc = 'Previous Hunk' })
+      end
+    }
   },
 
   {
