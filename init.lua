@@ -553,14 +553,18 @@ require('lazy').setup({
             end
           end, { 'i' }),
 
-          ['<Tab>'] = cmp.mapping(function()
+          ['<Tab>'] = cmp.mapping(function(fallback)
             if luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
+            else
+              fallback()
             end
           end, { 'i', 's' }),
           ['<S-Tab>'] = cmp.mapping(function()
             if luasnip.locally_jumpable(-1) then
               luasnip.jump(-1)
+            else
+              fallback()
             end
           end, { 'i', 's' }),
 
@@ -582,7 +586,7 @@ require('lazy').setup({
     build = ':TSUpdate',
     opts = {
       ensure_installed = {
-        --   'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc'
+        'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc'
       },
       -- Autoinstall languages that are not installed
       auto_install = true,
@@ -600,7 +604,6 @@ require('lazy').setup({
 
       -- Prefer git instead of curl in order to improve connectivity in some environments
       require('nvim-treesitter.install').prefer_git = true
-      ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
 
       -- There are additional nvim-treesitter modules that you can use to interact
