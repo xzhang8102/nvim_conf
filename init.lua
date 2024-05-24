@@ -1,6 +1,24 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+vim.api.nvim_create_autocmd('TextYankPost', {
+  desc = 'Highlight when yanking (copying) text',
+  group = vim.api.nvim_create_augroup('zxw-highlight-on-yank', { clear = true }),
+  callback = function()
+    vim.highlight.on_yank()
+  end,
+})
+
+if vim.g.vscode then
+  local code = require('vscode-neovim') 
+  vim.keymap.set('n', ']c', function()
+    code.action('workbench.action.editor.nextChange')
+  end)
+  vim.keymap.set('n', '[c', function()
+    code.action('workbench.action.editor.previousChange')
+  end)
+  return
+end
 vim.opt.number = true
 vim.opt.relativenumber = true
 
@@ -47,14 +65,6 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 
 vim.keymap.set('i', 'jj', '<esc>')
-
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('zxw-highlight-on-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-})
 
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
@@ -165,8 +175,8 @@ require('lazy').setup({
         defaults = {
           mappings = {
             i = {
-              ['<C-j>'] = actions.move_selection_next,
-              ['<C-k>'] = actions.move_selection_previous,
+              ['<C-n>'] = actions.move_selection_next,
+              ['<C-p>'] = actions.move_selection_previous,
               ['<ESC>'] = actions.close,
               ['<C-c>'] = false,
               ['<C-/>'] = actions.which_key
@@ -534,8 +544,8 @@ require('lazy').setup({
         --
         -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert {
-          ['<C-j>'] = cmp.mapping.select_next_item(),
-          ['<C-k>'] = cmp.mapping.select_prev_item(),
+          ['<C-n>'] = cmp.mapping.select_next_item(),
+          ['<C-p>'] = cmp.mapping.select_prev_item(),
 
           -- Scroll the documentation window [b]ack / [f]orward
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
