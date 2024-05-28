@@ -1,0 +1,6 @@
+{
+  "Lua.runtime.version": "LuaJIT",
+  "Lua.workspace.library": [
+    "/usr/local/Cellar/neovim/0.10.0/share/nvim/runtime/lua"
+  ]
+}
